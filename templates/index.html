@@ -1,59 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Header Box with Navigation</title>
-	<style>
-	
-		nav {
-			display: inline-block;
-			margin-right: 20px;
-			color: black;
-			font-weight: bold;
-			text-decoration: none;
-		}
-        nav a{
-            text-decoration: none;
-            
-        }
-		
-		header{
-                background-color: rgb(173,209,112);
-                padding: 2px;
-               
-            }
-        
-            #Title{
-                text-align: center;
-          
-            }
-            #logo{
-                position: absolute;
-                left:30px;
-                top:15px;
-                height: 70px;
-                width: 70px;
-                
-            }
-
-            body{
-                text-align: center;
-            }
-			#login a{
-                text-decoration: none;
-            }
-            #register a{
-                text-decoration: none;
-            }
-            #account a{
-                text-decoration: none;
-            }
-            #logout a{
-                text-decoration: none;
-            }
-	</style>
+	<title>AAC Interpreter</title>
+    <link rel="stylesheet" type="text/css" href="stylesheetindex.css">
 </head>
+    <header>
+        <h1 id="Title">ACC</h1>
+        <!--<nav><a href="/">Home</a></nav> Placeholder link; replace with actual navigation if needed -->
+    </header>
 
     <body>
+    
+        <div>
+            <form action="/predict" method="post">
+                <label for="input_text">Phrase:</label>
+                <input type="text" id="input_text" name="input_text" required>
+                <input type="submit" value="Predict">
+            </form>
+        </div>
+
         {% with messages = get_flashed_messages() %}
         {% if messages %}
         <ul class="flashes">
@@ -63,19 +28,7 @@
         </ul>
         {% endif %}
         {% endwith %}
-    
-        <header>
-            <h1 id="Title">Main Page</h1>
-            <nav><a href="/">Home</a></nav> <!-- Placeholder link; replace with actual navigation if needed -->
-        </header>
-    
-        <div>
-            <form action="/predict" method="post">
-                <label for="input_text">Enter your text:</label>
-                <input type="text" id="input_text" name="input_text" required>
-                <input type="submit" value="Predict">
-            </form>
-        </div>
+
     </body>    
   
 </html>
