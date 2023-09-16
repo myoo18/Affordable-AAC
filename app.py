@@ -1,13 +1,34 @@
 from flask import Flask, render_template, request, url_for, redirect, flash
 from model import generate_text
 from input import rearrange_sentence
+from flask_pymongo import PyMongo
+import en_core_web_sm
+from pymongo import MongoClient
+import certifi
+
+
+connection = 'mongodb+srv://jyee25:jyee@vthacks.lza3x1j.mongodb.net/'
+client = MongoClient(connection, tlsCAFile=certifi.where())
+# Select the correct database and collection
+
+db = client['gridwords']  # replace 'your_database_name' with the name of your database
+collection = db['noun']
 
 app = Flask(__name__)
 app.secret_key = 'your_super_secret_key'  
 
+
 @app.route('/')
 def index():
-    return render_template('index.html')
+    # Create a dictionary where each key is a collection name and its value is a list of words from that collection
+    data = {}
+    for collection_name in db.list_collection_names():
+        collection = db[collection_name]
+        data[collection_name] = [doc.get('word', doc.get(collection_name)) for doc in collection.find({}, {"word": 1, collection_name: 1, "_id": 0}) if 'word' in doc or collection_name in doc]
+    return render_template('index.html', data=data)
+
+if __name__ == "__main__":
+    app.run(debug=True)
 
 @app.route('/predict', methods=['POST'])
 def predict():

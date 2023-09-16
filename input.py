@@ -2,6 +2,7 @@ import spacy
 
 nlp = spacy.load("en_core_web_sm")
 
+
 def rearrange_sentence(sentence):
     doc = nlp(sentence)
     
