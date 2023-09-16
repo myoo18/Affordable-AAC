@@ -26,7 +26,8 @@
    pip install transformers
    pip install torch torchvision
    pip install Flask
-   pip install sentencepiece
+   pip install spacy
+   python -m spacy download en_core_web_sm
    ```
 
 4. **Upgrade pip (if needed)**
