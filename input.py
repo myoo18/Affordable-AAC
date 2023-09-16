@@ -15,6 +15,7 @@ def rearrange_sentence(sentence):
     
     #Make back to string
     rearranged_sentence = ' '.join(rearranged_tokens)
+   
     
     return rearranged_sentence
 

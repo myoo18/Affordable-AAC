@@ -1,8 +1,9 @@
 from flask import Flask, render_template, request, url_for, redirect, flash
 from model import generate_text
+from input import rearrange_sentence
 
 app = Flask(__name__)
-app.secret_key = 'your_super_secret_key'  # replace 'your_super_secret_key' with a random string
+app.secret_key = 'your_super_secret_key'  
 
 @app.route('/')
 def index():
@@ -16,6 +17,7 @@ def predict():
         flash("No input text provided")
         return redirect(url_for('index'))
 
+    input_text = rearrange_sentence(input_text)#Fix sentence
     decoded_output = generate_text(input_text)
     
     flash(f"Prediction: {decoded_output}")
