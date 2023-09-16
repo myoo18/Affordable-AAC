@@ -1,30 +1,79 @@
-step 1. Create Environment: ```python -m venv venv```
-step 2. Step into Virtual Environment: ```source venv/Scripts/activate```
-step 3. Install dependencies
-pip install transformers
-pip install torch torchvision
-pip install Flask
-pip install sentencepiece
+# Project Setup and Instructions
 
-step 4(if needed). Upgrade your pip: python.exe -m pip install --upgrade pip
-......................................................................................................................
-To run: ```$ python main.py```
-----------------------------------------------------------------------------------------------------------------------
-1. Image Recognition:
+## Setup
+
+1. **Create a Virtual Environment**
+
+   ```bash
+   python -m venv venv
+   ```
+
+2. **Activate the Virtual Environment**
+
+   On Windows:
+   ```bash
+   venv\Scripts\activate
+   ```
+   
+   On macOS and Linux:
+   ```bash
+   source venv/bin/activate
+   ```
+
+3. **Install Dependencies**
+
+   ```bash
+   pip install transformers
+   pip install torch torchvision
+   pip install Flask
+   pip install sentencepiece
+   ```
+
+4. **Upgrade pip (if needed)**
+
+   ```bash
+   python.exe -m pip install --upgrade pip
+   ```
+
+## Running the Application
+
+To run the project:
+
+```bash
+python main.py
+```
+
+---
+
+## Features
+
+### 1. Image Recognition
+
 Before using language models, the system must recognize the content of an image.
 
-2.Pre-trained Model:
-Hugging Face transformers library
-use the Grammarly/coedit-large text to text (txt) model
+### 2. Pre-trained Model
 
-3.Database:
+For this project, we utilize the **Hugging Face transformers library**. Specifically, the `Grammarly/coedit-large` text-to-text (txt) model is used.
 
-4. User Interface:
-Fetch related words/sentences from the database.
-Display or speak out the words/sentences
+### 3. Database
 
-5. Integration with Language Models:
+[]
 
-6. Continuous Learning:
+### 4. User Interface
 
-Final Thoughts:
+- Fetch related words/sentences from the database.
+- Display or verbalize the words/sentences for the user.
+
+### 5. Integration with Language Models
+
+[]
+
+### 6. Continuous Learning
+
+[]
+
+---
+
+## Final Thoughts
+
+[]
