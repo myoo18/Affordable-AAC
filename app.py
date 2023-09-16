@@ -1,18 +1,21 @@
 from flask import Flask, render_template, request, url_for, redirect, flash, session
 from model import generate_text
 from input import rearrange_sentence
+from flask_pymongo import PyMongo
+import en_core_web_sm
 from pymongo import MongoClient
 import certifi
 
-app = Flask(__name__)
-app.secret_key = 'your_super_secret_key'
 
-# MongoDB setup
 connection = 'mongodb+srv://jyee25:jyee@vthacks.lza3x1j.mongodb.net/'
 client = MongoClient(connection, tlsCAFile=certifi.where())
-#connection to users mongodb
-dbusers = client['users']
-collection = dbusers['login']
+# Select the correct database and collection
+
+db = client['gridwords']  # replace 'your_database_name' with the name of your database
+collection = db['noun']
+
+app = Flask(__name__)
+app.secret_key = 'your_super_secret_key'  
 
 @app.route('/')
 def index():

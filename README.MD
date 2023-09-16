@@ -40,6 +40,11 @@
    python.exe -m pip install --upgrade pip
    ```
 
+if spacy didnt work
+   ```bash
+   python -m spacy download en
+   ```
+
 ## Running the Application
 
 To run the project:

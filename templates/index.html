@@ -1,48 +1,211 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>AAC Interpreter</title>
-    <link rel="stylesheet" type="text/css" href="stylesheetindex.css">
+    <title>Header Box with Navigation</title>
+    <style>
+        .selected-word {
+            background-color: #c0c0c0;
+            border: 2px solid #000;
+        }
+        nav {
+            display: inline-block;
+            margin-right: 20px;
+            color: black;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        nav a {
+            text-decoration: none;
+        }
+        
+        header {
+            background-color: rgb(173,209,112);
+            padding: 2px;
+        }
+        
+        #Title {
+            text-align: center;
+        }
+        
+        #logo {
+            position: absolute;
+            left: 30px;
+            top: 15px;
+            height: 70px;
+            width: 70px;
+        }
+    
+        body {
+            text-align: center;
+        }
+        
+        #login a, #register a, #account a, #logout a {
+            text-decoration: none;
+        }
+        
+
+        To align the words in the format you've provided, where there are two words per row under each category, you'll want to make use of CSS Flexbox for the word containers. Here's how you can achieve this:
+
+        For each category's word container (div with category id), display it as a flex container.
+        Set the flex-wrap property to wrap so that the words move to the next line when the max per row is reached.
+        Adjust each word's box to take up half of the container's width, minus some margin.
+        Here's the updated CSS to achieve this:
+        
+        css
+        Copy code
+        #words-container > div {
+            display: flex; /* Display the container as flex */
+            flex-wrap: wrap; /* Allow wrapping */
+        }
+        
+        .word-box {
+            flex: 0 0 calc(50% - 10px); /* Takes up half the width, minus some margin */
+            /* ... rest of your styles ... */
+        }
+        Now, each category's word container will have two words per row.
+        
+        Here's the full CSS with the updated styles:
+        
+        css
+        Copy code
+        <style>
+            /* ... [previous styles] ... */
+        
+            #words-container > div {
+                display: flex; /* Display the container as flex */
+                flex-wrap: wrap; /* Allow wrapping */
+            }
+        
+            .word-box {
+                flex: 0 0 calc(50% - 10px); /* Takes up half the width, minus some margin */
+                display: block; 
+                width: 150px;
+                height: 50px;
+                line-height: 50px;
+                text-align: center;
+                margin: 5px auto; /* Centered the box */
+                padding: 0;
+                border: 1px solid #000;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+            
+            #words-container {
+                display: flex; /* Convert children to flex items */
+                justify-content: space-around; /* Space the columns equally */
+                flex-wrap: wrap; /* Allow wrapping for responsiveness */
+            }
+            
+            #words-container > h2,
+            #words-container > div {
+                flex: 1; /* Allows columns to grow equally */
+                min-width: 160px; /* Minimum width for each column to avoid squeezing */
+            }
+        
+        </style>
+    
 </head>
     <header>
         <h1 id="Title">ACC</h1>
         <!--<nav><a href="/">Home</a></nav> Placeholder link; replace with actual navigation if needed -->
     </header>
 
-    <body>
-        {% if username %}
-            
-            {%if 'logged in' in session%}
-                <span id="account">Profile: {{ username }}</span>
-            {%endif%}
-            <br/>
-            <a id="logout" href="/logout">Logout</a>
-        
-        {% else %}
+<body>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class="flashes">
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
 
-        <span id="login"><a href="/login">Login</a></span><br/>
-        <span id="register"><a href="/register">Register</a></span>
-        
-        {% endif %}
+    <header>
+        <h1 id="Title">Main Page</h1>
+        <nav><a href="/">Home</a></nav> <!-- Placeholder link; replace with actual navigation if needed -->
+    </header>
     
-        <div>
-            <form action="/predict" method="post">
-                <label for="input_text">Phrase:</label>
-                <input type="text" id="input_text" name="input_text" required>
-                <input type="submit" value="Predict">
-            </form>
-        </div>
 
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul class="flashes">
-            {% for message in messages %}
-            <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        {% endwith %}
+    <div>
+        <form action="/predict" method="post">
+            <label for="input_text">Enter your text:</label>
+            <input type="text" id="input_text" name="input_text" required>
+            <input type="submit" value="Predict">
+        </form>
+    </div>
 
-    </body>    
-  
+
+    <div id="selected-words">
+        <h2>Selected Words</h2>
+        <div id="selected-words-container"></div>
+    </div>
+    
+    <div id="words-container">
+        {% for category, words in data.items() %}
+            <h2>{{ category.capitalize() }}</h2>
+            <div id="{{ category }}">
+                {% for word in words %}
+                    <div class="word-box" data-category="{{ category }}" data-index="{{ loop.index0 }}" onclick="wordClicked('{{ word }}', this)">{{ word }}</div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    
+    
+    </div>
+
+    <script>
+        function wordClicked(word, element) {
+            console.log(`Clicked on: ${word}`);
+            
+            // Remove the word from its original location
+            element.remove();
+        
+            // Add the word to the "selected words" container
+            const selectedWordsContainer = document.getElementById('selected-words-container');
+            const wordDiv = document.createElement('div');
+            wordDiv.className = 'word-box selected-word';
+            wordDiv.setAttribute('data-category', element.getAttribute('data-category'));
+            wordDiv.innerText = word;
+        
+            // Add functionality to move it back when clicked in the selected box
+            wordDiv.onclick = function() {
+                wordUnselected(word, wordDiv);
+            }
+        
+            selectedWordsContainer.appendChild(wordDiv);
+        }
+        
+        function wordUnselected(word, element) {
+            console.log(`Unselected: ${word}`);
+        
+            // Remove the word from the "selected words" container
+            element.remove();
+        
+            // Get the category of the word
+            const category = element.getAttribute('data-category');
+        
+            // Place the word back to its original category at the end
+            const categoryDiv = document.getElementById(category);
+            const wordDiv = document.createElement('div');
+            wordDiv.className = 'word-box';
+            wordDiv.setAttribute('data-category', category);
+            wordDiv.innerText = word;
+            wordDiv.onclick = function() {
+                wordClicked(word, wordDiv);
+            };
+        
+            categoryDiv.appendChild(wordDiv);
+        }
+        
+    </script>
+    
+
+</body>    
 </html>
+
+
+
+
+
+
