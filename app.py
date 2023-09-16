@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template, request, url_for, redirect, flash
+from flask import Flask, render_template, request, url_for, redirect, flash
 from model import generate_text
 
 app = Flask(__name__)
