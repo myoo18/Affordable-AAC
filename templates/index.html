@@ -10,6 +10,20 @@
     </header>
 
     <body>
+        {% if username %}
+            
+            {%if 'logged in' in session%}
+                <span id="account">Profile: {{ username }}</span>
+            {%endif%}
+            <br/>
+            <a id="logout" href="/logout">Logout</a>
+        
+        {% else %}
+
+        <span id="login"><a href="/login">Login</a></span><br/>
+        <span id="register"><a href="/register">Register</a></span>
+        
+        {% endif %}
     
         <div>
             <form action="/predict" method="post">
