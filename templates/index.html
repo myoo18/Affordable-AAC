@@ -100,6 +100,8 @@
             box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
             cursor: pointer;
             transition: box-shadow 0.3s;
+            width: 150px;  
+            text-align: center;
         }
         
         .word-box:hover {
@@ -116,6 +118,25 @@
             color: white;
         }
 
+
+        .word-box[data-category='noun'] {
+        background-color: #FFD700;
+        }
+
+        .word-box[data-category='verb'] {
+        background-color: #FF4500; 
+        }
+
+        .word-box[data-category='adjective'] {
+         background-color: #c022e0; 
+        }
+        .word-box[data-category='pronoun'] {
+        background-color: #b5bdc7;
+        }
+
+
+
+
     </style>
 
 </head>
@@ -124,17 +145,7 @@
     </header>
 
 <body>
-    {% if username %}
-        
-          {%if 'logged in' in session%}
-            <span id="account">Profile: {{ username }}</span>
-          {%endif%}
-          <br/>
-          <a id="logout" href="/logout">Logout</a>
-        
-    {% else %}
-        <span id="login"><a href="/login">Login</a></span><br/>
-    {% endif %}
+    
 
     {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -162,20 +173,54 @@
         <div id="selected-words-container"></div>
     </div>
     
+
     <div id="words-container">
-        {% for category, words in data.items() %}
-            <h2>{{ category.capitalize() }}
-                <div id="{{ category }}">
-                    {% for word_data in words %}
-                    <div class="word-box" data-category="{{ category }}" data-index="{{ loop.index0 }}" onclick="wordClicked('{{ word_data.word }}', 'static/{{ word_data.picture }}', this, event)">
-                        {{ word_data.word }}
-                        <img src="{{ url_for('static', filename=word_data.picture) }}" alt="{{ word_data.word }}" width="50" height="50">
-                    </div>
-                    {% endfor %}
+    
+        <div id="pronoun">
+            <!-- Dynamic Entries -->
+            {% for word_data in data.pronoun %}
+                <div class="word-box" data-category="pronoun" onclick="wordClicked('{{ word_data.word }}', 'static/{{ word_data.picture }}', this, event)">
+                    {{ word_data.word }}
+                    <img src="{{ url_for('static', filename=word_data.picture) }}" alt="{{ word_data.word }}" width="50" height="50">
                 </div>
-            </h2>
-        {% endfor %}
-    </div>
+            {% endfor %}
+        </div>
+        <div id="noun">
+    
+            <!-- Dynamic Entries -->
+            {% for word_data in data.noun %}
+                <div class="word-box" data-category="noun" onclick="wordClicked('{{ word_data.word }}', 'static/{{ word_data.picture }}', this, event)">
+                    {{ word_data.word }}
+                    <img src="{{ url_for('static', filename=word_data.picture) }}" alt="{{ word_data.word }}" width="50" height="50">
+                </div>
+            {% endfor %}
+        </div>
+        <div id="verb">
+    
+            <!-- Dynamic Entries -->
+            {% for word_data in data.verb %}
+                <div class="word-box" data-category="verb" onclick="wordClicked('{{ word_data.word }}', 'static/{{ word_data.picture }}', this, event)">
+                    {{ word_data.word }}
+                    <img src="{{ url_for('static', filename=word_data.picture) }}" alt="{{ word_data.word }}" width="50" height="50">
+                </div>
+            {% endfor %}
+        </div>
+        <div id="adjective">
+    
+            <!-- Dynamic Entries -->
+            {% for word_data in data.adjective %}
+                <div class="word-box" data-category="adjective" onclick="wordClicked('{{ word_data.word }}', 'static/{{ word_data.picture }}', this, event)">
+                    {{ word_data.word }}
+                    <img src="{{ url_for('static', filename=word_data.picture) }}" alt="{{ word_data.word }}" width="50" height="50">
+                </div>
+            {% endfor %}
+        </div>
+
+
+
+          </div>
+    
+
     <script>
         function wordClicked(word, picture, element, event) {
             event.preventDefault();
