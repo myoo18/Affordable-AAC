@@ -116,6 +116,18 @@
             color: white;
         }
 
+
+        .word-box[data-category='noun'] {
+    background-color: #FFD700; /* Example color for nouns - gold */
+}
+
+.word-box[data-category='verb'] {
+    background-color: #FF4500; /* Example color for verbs - orangered */
+}
+
+/* Add other categories as needed */
+
+
     </style>
 
 </head>
@@ -173,7 +185,7 @@
                     </div>
                     {% endfor %}
                 </div>
-            </h2>
+            </h2>   
         {% endfor %}
     </div>
     <script>
