@@ -26,6 +26,11 @@
    pip install transformers
    pip install torch torchvision
    pip install Flask
+   pip install flask_pymongo
+   pip install pymongo
+   pip install werkzeug
+   pip install certifi
+   pip install ssl
    pip install spacy
    python -m spacy download en_core_web_sm
    ```
