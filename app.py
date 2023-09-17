@@ -25,7 +25,7 @@ def index():
         collection = dbWord[collection_name]
         data[collection_name] = [{'word': doc.get('word', doc.get(collection_name)), 'picture': doc.get('picture')} for doc in collection.find({}, {"word": 1, "picture": 1, collection_name: 1, "_id": 0}) if 'word' in doc or collection_name in doc]
     username = session.get('username')
-    print(data)
+   # print(data)
     return render_template('index.html', data=data, username=username)
 
 
