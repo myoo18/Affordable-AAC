@@ -1,8 +1,9 @@
-from transformers import BertTokenizer, BertModel
+from transformers import GPT2Tokenizer, GPT2Model
 import torch
 
-tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-model = BertModel.from_pretrained('bert-base-uncased')
+# Load GPT-2 tokenizer and model
+tokenizer = GPT2Tokenizer.from_pretrained('gpt2-medium')
+model = GPT2Model.from_pretrained('gpt2-medium')
 model.eval()
 
 def get_embedding(sentence):

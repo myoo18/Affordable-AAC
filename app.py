@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, redirect, flash, session
+from flask import Flask, render_template, request, url_for, redirect, flash, session, jsonify
 from model import generate_text
 from input import rearrange_sentence
 from flask_pymongo import PyMongo
@@ -19,14 +19,17 @@ dbWord = client['gridwords']
 
 @app.route('/')
 def index():
+    username = session.get('username')
+    data = getdata()
+    return render_template('index.html',data = data, username=username)
+
+def getdata():
     # Create a dictionary where each key is a collection name and its value is a list of dicts with words and their picture addresses
     data = {}
     for collection_name in dbWord.list_collection_names():
         collection = dbWord[collection_name]
         data[collection_name] = [{'word': doc.get('word', doc.get(collection_name)), 'picture': doc.get('picture')} for doc in collection.find({}, {"word": 1, "picture": 1, collection_name: 1, "_id": 0}) if 'word' in doc or collection_name in doc]
-    username = session.get('username')
-    print(data)
-    return render_template('index.html', data=data, username=username)
+    return data
 
 
 @app.route('/login', methods=['GET', 'POST'])
