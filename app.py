@@ -29,7 +29,6 @@ def index():
     return render_template('index.html', data=data, username=username)
 
 
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
