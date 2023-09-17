@@ -1,19 +1,28 @@
-import requests
 from pymongo import MongoClient
-import certifi
-import pymongo
-import ssl
-import spacy
 
-# MongoDB Setup
-connection = 'mongodb+srv://jyee25:jyee@vthacks.lza3x1j.mongodb.net/'
-client = MongoClient(connection, tlsCAFile=certifi.where())
-db = client['users']
-collection = db['login']
+# Establish a connection to MongoDB
+client = MongoClient('mongodb+srv://jyee25:jyee@vthacks.lza3x1j.mongodb.net/')
 
-data = {"user" : "pm",
-        "pass" : "pm"}
+# Access the 'gridwords' database
+db = client['gridwords']
 
-collection.insert_one(data)
+# List of collections
+collections = ['adjective', 'noun', 'verb', 'pronoun']
 
+# Iterate through each collection
+for col_name in collections:
+    collection = db[col_name]
+    
+    # Iterate through each document in the collection
+    for document in collection.find({}):
+        word = document['word']
+        print(f"Word: {word}")
+        
+        # Get the image link input from the user
+        image_link = input("Enter the image link for this word: ")
+        
+        # Update the document with the new image link
+        collection.update_one({'_id': document['_id']}, {"$set": {"picture": image_link}})
+
+# Close the client connection
 client.close()
