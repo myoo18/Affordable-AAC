@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, redirect, flash, session
+from flask import Flask, render_template, request, url_for, redirect, flash
 from model import generate_text
 from input import rearrange_sentence
 from flask_pymongo import PyMongo
