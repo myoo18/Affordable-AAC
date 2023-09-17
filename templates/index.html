@@ -152,49 +152,6 @@
             
             // Remove the word from its original location
             element.remove();
-        
-            // Add the word to the "selected words" container
-            const selectedWordsContainer = document.getElementById('selected-words-container');
-            const wordDiv = document.createElement('div');
-            wordDiv.className = 'word-box selected-word';
-            wordDiv.setAttribute('data-category', element.getAttribute('data-category'));
-            wordDiv.innerText = word;
-        
-            // Add functionality to move it back when clicked in the selected box
-            wordDiv.onclick = function() {
-                wordUnselected(word, wordDiv);
-            }
-        
-            selectedWordsContainer.appendChild(wordDiv);
-        }
-        
-        function wordUnselected(word, element) {
-            console.log(`Unselected: ${word}`);
-        
-            // Remove the word from the "selected words" container
-            element.remove();
-        
-            // Get the category of the word
-            const category = element.getAttribute('data-category');
-        
-            // Place the word back to its original category at the end
-            const categoryDiv = document.getElementById(category);
-            const wordDiv = document.createElement('div');
-            wordDiv.className = 'word-box';
-            wordDiv.setAttribute('data-category', category);
-            wordDiv.innerText = word;
-            wordDiv.onclick = function() {
-                wordClicked(word, wordDiv);
-            };
-        
-            categoryDiv.appendChild(wordDiv);
-        }
-        
-        function wordClicked(word, element) {
-            console.log(`Clicked on: ${word}`);
-            
-            // Remove the word from its original location
-            element.remove();
             
             // Add the word to the "selected words" container
             const selectedWordsContainer = document.getElementById('selected-words-container');

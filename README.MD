@@ -32,6 +32,7 @@
    pip install certifi
    pip install ssl
    pip install spacy
+   pip install scikit-learn
    python -m spacy download en_core_web_sm
    ```
 
