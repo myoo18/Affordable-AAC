@@ -1,32 +1,22 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>AAC Interpretor</title>
     <style>
-        .selected-word {
-            background-color: #c0c0c0;
-            border: 2px solid #000;
+        body {
+            text-align: center;
         }
-        nav {
-            display: inline-block;
-            margin-right: 20px;
-            color: black;
-            font-weight: bold;
-            text-decoration: none;
-        }
-        nav a {
-            text-decoration: none;
-        }
-        
+
         header {
             background-color: rgb(173,209,112);
             padding: 2px;
         }
-        
+
         #Title {
             text-align: center;
         }
-        
+
         #logo {
             position: absolute;
             left: 30px;
@@ -34,61 +24,61 @@
             height: 70px;
             width: 70px;
         }
-    
-        body {
-            text-align: center;
-        }
-        
-        #login a, #register a, #account a, #logout a {
+
+        nav {
+            display: inline-block;
+            margin-right: 20px;
+            color: black;
+            font-weight: bold;
             text-decoration: none;
         }
-        
-        #words-container > div {
-            display: flex; /* Display the container as flex */
-            flex-wrap: wrap; /* Allow wrapping */
-        }
-        
-        .word-box {
-            flex: 0 0 calc(50% - 10px); /* Takes up half the width, minus some margin */
-            /* ... rest of your styles ... */
+
+        nav a, 
+        #login a, 
+        #register a, 
+        #account a, 
+        #logout a {
+            text-decoration: none;
         }
 
-        <style>
-            /* ... [previous styles] ... */
-        
-            #words-container > div {
-                display: flex; /* Display the container as flex */
-                flex-wrap: wrap; /* Allow wrapping */
-            }
-        
-            .word-box {
-                flex: 0 0 calc(50% - 10px); /* Takes up half the width, minus some margin */
-                display: block; 
-                width: 150px;
-                height: 50px;
-                line-height: 50px;
-                text-align: center;
-                margin: 5px auto; /* Centered the box */
-                padding: 0;
-                border: 1px solid #000;
-                cursor: pointer;
-                transition: background-color 0.3s;
-            }
-            
-            #words-container {
-                display: flex; /* Convert children to flex items */
-                justify-content: space-around; /* Space the columns equally */
-                flex-wrap: wrap; /* Allow wrapping for responsiveness */
-            }
-            
-            #words-container > h2,
-            #words-container > div {
-                flex: 1; /* Allows columns to grow equally */
-                min-width: 160px; /* Minimum width for each column to avoid squeezing */
-            }
-        
-        </style>
-    
+        .selected-word {
+            background-color: #c0c0c0;
+            border: 2px solid #000;
+        }
+
+        #words-container > div {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .word-box {
+            flex: 0 0 calc(50% - 10px);
+            display: block;
+            width: 150px;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            margin: 5px auto;
+            padding: 0;
+            border: 1px solid #000;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #words-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        #words-container > h2,
+        #words-container > div {
+            flex: 1;
+            min-width: 160px;
+        }
+
+    </style>
+
 </head>
     <header>
         <h1 id="Title">AAC</h1>
@@ -137,115 +127,78 @@
         {% for category, words in data.items() %}
             <h2>{{ category.capitalize() }}</h2>
             <div id="{{ category }}">
-                {% for word in words %}
-                    <div class="word-box" data-category="{{ category }}" data-index="{{ loop.index0 }}" onclick="wordClicked('{{ word }}', this)">{{ word }}</div>
+                {% for word_data in words %}
+                    <div class="word-box" data-category="{{ category }}" data-index="{{ loop.index0 }}" onclick="wordClicked('{{ word_data.word }}', '{{ word_data.picture }}', this)">
+                        {{ word_data.word }}
+                        <img src="{{ url_for('static', filename=word_data.picture) }}" alt="{{ word_data.word }}" width="50" height="50">
+                    </div>
                 {% endfor %}
             </div>
         {% endfor %}
-    
-    
     </div>
 
     <script>
-        function wordClicked(word, element) {
+        function wordClicked(word, imgSrc, element) {
             console.log(`Clicked on: ${word}`);
             
-            // Remove the word from its original location
-            element.remove();
-        
             // Add the word to the "selected words" container
             const selectedWordsContainer = document.getElementById('selected-words-container');
             const wordDiv = document.createElement('div');
             wordDiv.className = 'word-box selected-word';
             wordDiv.setAttribute('data-category', element.getAttribute('data-category'));
             wordDiv.innerText = word;
-        
-            // Add functionality to move it back when clicked in the selected box
+
+            const wordImage = document.createElement('img');
+            wordImage.src = imgSrc;
+            wordImage.alt = word;
+            wordImage.width = 50;
+            wordImage.height = 50;
+
+            wordDiv.appendChild(wordImage);
             wordDiv.onclick = function() {
-                wordUnselected(word, wordDiv);
-            }
-        
-            selectedWordsContainer.appendChild(wordDiv);
-        }
-        
-        function wordUnselected(word, element) {
-            console.log(`Unselected: ${word}`);
-        
-            // Remove the word from the "selected words" container
-            element.remove();
-        
-            // Get the category of the word
-            const category = element.getAttribute('data-category');
-        
-            // Place the word back to its original category at the end
-            const categoryDiv = document.getElementById(category);
-            const wordDiv = document.createElement('div');
-            wordDiv.className = 'word-box';
-            wordDiv.setAttribute('data-category', category);
-            wordDiv.innerText = word;
-            wordDiv.onclick = function() {
-                wordClicked(word, wordDiv);
+                wordUnselected(word, imgSrc, wordDiv);
             };
         
-            categoryDiv.appendChild(wordDiv);
-        }
-        
-        function wordClicked(word, element) {
-            console.log(`Clicked on: ${word}`);
-            
-            // Remove the word from its original location
-            element.remove();
-            
-            // Add the word to the "selected words" container
-            const selectedWordsContainer = document.getElementById('selected-words-container');
-            const wordDiv = document.createElement('div');
-            wordDiv.className = 'word-box selected-word';
-            wordDiv.setAttribute('data-category', element.getAttribute('data-category'));
-            wordDiv.innerText = word;
-            
-            // Add functionality to move it back when clicked in the selected box
-            wordDiv.onclick = function() {
-                wordUnselected(word, wordDiv);
-            }
-            
             selectedWordsContainer.appendChild(wordDiv);
-            
+            element.remove();
+
             // Append the word to the input text box
             const inputBox = document.getElementById('input_text');
-            inputBox.value += word + " ";  // Adding a space after the word
+            inputBox.value += word + " ";
         }
         
-        function wordUnselected(word, element) {
+        function wordUnselected(word, imgSrc, element) {
             console.log(`Unselected: ${word}`);
-            
-            // Remove the word from the "selected words" container
-            element.remove();
-            
-            // Get the category of the word
+
             const category = element.getAttribute('data-category');
-            
-            // Place the word back to its original category at the end
             const categoryDiv = document.getElementById(category);
             const wordDiv = document.createElement('div');
             wordDiv.className = 'word-box';
             wordDiv.setAttribute('data-category', category);
             wordDiv.innerText = word;
             wordDiv.onclick = function() {
-                wordClicked(word, wordDiv);
+                wordClicked(word, imgSrc, wordDiv);
             };
+
+            const wordImage = document.createElement('img');
+            wordImage.src = imgSrc;
+            wordImage.alt = word;
+            wordImage.width = 50;
+            wordImage.height = 50;
+
+            wordDiv.appendChild(wordImage);
             
             categoryDiv.appendChild(wordDiv);
-            
-            // Remove the word from the input text box
-            const inputBox = document.getElementById('input_text');
-            inputBox.value = inputBox.value.replace(new RegExp(word + " ", 'g'), "");  // Removing the word and the following space
-        }
-        
-        
-    </script>
-    
+            element.remove();
 
-</body>    
+            const inputBox = document.getElementById('input_text');
+            inputBox.value = inputBox.value.replace(new RegExp(word + " ", 'g'), "");
+        }
+
+    </script>
+
+</body>
+
 </html>
 
 
