@@ -5,76 +5,115 @@
     <title>AAC Interpretor</title>
     <style>
         body {
-            text-align: center;
-        }
-
-        header {
-            background-color: rgb(173,209,112);
-            padding: 2px;
-        }
-
-        #Title {
-            text-align: center;
-        }
-
-        #logo {
-            position: absolute;
-            left: 30px;
-            top: 15px;
-            height: 70px;
-            width: 70px;
-        }
-
-        nav {
-            display: inline-block;
-            margin-right: 20px;
-            color: black;
-            font-weight: bold;
-            text-decoration: none;
-        }
-
-        nav a, 
-        #login a, 
-        #register a, 
-        #account a, 
-        #logout a {
-            text-decoration: none;
-        }
-
-        .selected-word {
-            background-color: #c0c0c0;
-            border: 2px solid #000;
-        }
-
-        #words-container > div {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .word-box {
-            flex: 0 0 calc(50% - 10px);
-            display: block;
-            width: 150px;
-            height: 50px;
-            line-height: 50px;
-            text-align: center;
-            margin: 5px auto;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
             padding: 0;
-            border: 1px solid #000;
+            color: #333;
+        }
+        
+        header {
+            background: linear-gradient(45deg, #6C5B7B, #C06C84);
+            padding: 20px 0;
+            color: #FFF;
+            text-align: center;
+        }
+        
+        h1, h2 {
+            margin: 0;
+        }
+        
+        #account, #login, #logout {
+            display: inline-block;
+            margin: 10px;
+        }
+        
+        a {
+            color: #C06C84;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        a:hover {
+            color: #6C5B7B;
+        }
+        
+        .flashes {
+            list-style-type: none;
+            padding: 10px;
+            background-color: #ffcccc;
+            border: 1px solid #ff0000;
+            margin-bottom: 20px;
+        }
+        
+        .flashes li {
+            margin: 10px 0;
+        }
+        
+        form {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        
+        input[type="submit"] {
+            padding: 10px 20px;
+            background: #6C5B7B;
+            color: white;
+            border: none;
+            border-radius: 3px;
             cursor: pointer;
             transition: background-color 0.3s;
         }
-
-        #words-container {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
+        
+        input[type="submit"]:hover {
+            background: #C06C84;
         }
-
-        #words-container > h2,
-        #words-container > div {
-            flex: 1;
-            min-width: 160px;
+        
+        #selected-words, #words-container {
+            margin: 20px 0;
+        }
+        
+        .word-box {
+            display: inline-block;
+            background: #FFF;
+            padding: 10px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: box-shadow 0.3s;
+        }
+        
+        .word-box:hover {
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .word-box img {
+            display: block;
+            margin: 10px auto;
+        }
+        
+        .selected-word {
+            background: #6C5B7B;
+            color: white;
         }
 
     </style>
@@ -125,78 +164,75 @@
     
     <div id="words-container">
         {% for category, words in data.items() %}
-            <h2>{{ category.capitalize() }}</h2>
-            <div id="{{ category }}">
-                {% for word_data in words %}
-                    <div class="word-box" data-category="{{ category }}" data-index="{{ loop.index0 }}" onclick="wordClicked('{{ word_data.word }}', '{{ word_data.picture }}', this)">
+            <h2>{{ category.capitalize() }}
+                <div id="{{ category }}">
+                    {% for word_data in words %}
+                    <div class="word-box" data-category="{{ category }}" data-index="{{ loop.index0 }}" onclick="wordClicked('{{ word_data.word }}', 'static/{{ word_data.picture }}', this, event)">
                         {{ word_data.word }}
                         <img src="{{ url_for('static', filename=word_data.picture) }}" alt="{{ word_data.word }}" width="50" height="50">
                     </div>
-                {% endfor %}
-            </div>
+                    {% endfor %}
+                </div>
+            </h2>
         {% endfor %}
     </div>
-
     <script>
-        function wordClicked(word, imgSrc, element) {
-            console.log(`Clicked on: ${word}`);
-            
-            // Add the word to the "selected words" container
+        function wordClicked(word, picture, element, event) {
+            event.preventDefault();
+        
             const selectedWordsContainer = document.getElementById('selected-words-container');
+        
+            // Create the new div for the selected word
             const wordDiv = document.createElement('div');
             wordDiv.className = 'word-box selected-word';
             wordDiv.setAttribute('data-category', element.getAttribute('data-category'));
-            wordDiv.innerText = word;
-
-            const wordImage = document.createElement('img');
-            wordImage.src = imgSrc;
-            wordImage.alt = word;
-            wordImage.width = 50;
-            wordImage.height = 50;
-
-            wordDiv.appendChild(wordImage);
+            wordDiv.innerHTML = `${word} <img src="${picture}" alt="${word}" width="50" height="50">`;
+        
+            // Add the onclick function to handle deselecting
             wordDiv.onclick = function() {
-                wordUnselected(word, imgSrc, wordDiv);
+                wordUnselected(word, wordDiv);
             };
         
             selectedWordsContainer.appendChild(wordDiv);
+        
+            // Remove the original div
             element.remove();
-
-            // Append the word to the input text box
+        
+            // Add the word to the input text box
             const inputBox = document.getElementById('input_text');
             inputBox.value += word + " ";
         }
         
-        function wordUnselected(word, imgSrc, element) {
-            console.log(`Unselected: ${word}`);
-
+        function wordUnselected(word, element) {
             const category = element.getAttribute('data-category');
             const categoryDiv = document.getElementById(category);
+        
+            // Create the new div for the word to place it back in its category
             const wordDiv = document.createElement('div');
             wordDiv.className = 'word-box';
             wordDiv.setAttribute('data-category', category);
-            wordDiv.innerText = word;
-            wordDiv.onclick = function() {
-                wordClicked(word, imgSrc, wordDiv);
+            wordDiv.innerHTML = `${word} <img src="${element.querySelector('img').src}" alt="${word}" width="50" height="50">`;
+        
+            // Add the onclick function to handle selecting
+            wordDiv.onclick = function(event) {
+                wordClicked(word, element.querySelector('img').src, wordDiv, event);
             };
-
-            const wordImage = document.createElement('img');
-            wordImage.src = imgSrc;
-            wordImage.alt = word;
-            wordImage.width = 50;
-            wordImage.height = 50;
-
-            wordDiv.appendChild(wordImage);
-            
+        
             categoryDiv.appendChild(wordDiv);
+        
+            // Remove the selected div
             element.remove();
-
+        
+            // Remove the word from the input text box
             const inputBox = document.getElementById('input_text');
             inputBox.value = inputBox.value.replace(new RegExp(word + " ", 'g'), "");
         }
+        
 
+        
     </script>
-
+    
+    
 </body>
 
 </html>
