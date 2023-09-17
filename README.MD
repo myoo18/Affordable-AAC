@@ -26,6 +26,7 @@
    pip install transformers
    pip install torch torchvision
    pip install Flask
+   pip install flask_pymongo
    pip install pymongo
    pip install werkzeug
    pip install certifi
