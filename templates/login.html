@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    
+    <style>
+      body{
+        text-align:center;
+        background-color: beige;
+       
+      }
+      #Login_content{
+        margin-top: 20px;
+        font-size: 10px;
+      }
+
+      #user{
+        width:400px;
+        height:50px;
+      }
+      #pass{
+        margin-top: 10px;
+        width:400px;
+        height:50px;
+      }
+      #submit{
+        margin-top: 10px;
+        width:400px;
+        height:50px;
+      }
+      header{
+                background-color: rgb(173,209,112);
+                padding: 2px;
+               
+            }
+        
+            #Title{
+                text-align: center;
+          
+            }
+            #logo{
+                position: absolute;
+                left:30px;
+                top:15px;
+                height: 70px;
+                width: 70px;
+                
+            }
+    </style>
+</head>
+<body>
+  <header>
+
+   <a href="/"> <img id="logo" src="static\University Logo.png">  </a>
+    
+    <h1 id="Title">Login</h1>    
+
+</header>
+<div id="Login_content">
+    
+    {% if error %}
+    <p style="color:red;">Login failed. The username or password is incorrect.</p>
+    {% endif %}
+  
+      <div class="labels">
+        <form action="{{ url_for('login') }}" method="post">
+
+        <input id="user" type="text" name="field_user" placeholder = "Username" required><br>
+
+        <input id="pass" type="text" name="field_pass" placeholder = "Password" required><br>
+          
+      <div class="submit_btn">
+      <input id="submit" type="submit" value="Submit">
+      </div>
+          
+    </form>
+    </div>
+  
+
+   
+    </div><!--END Content Wrap-->
+</body>
+</html>
