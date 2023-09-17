@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Header Box with Navigation</title>
+    <title>AAC Interpretor</title>
     <style>
         .selected-word {
             background-color: #c0c0c0;
@@ -43,16 +43,6 @@
             text-decoration: none;
         }
         
-
-        To align the words in the format you've provided, where there are two words per row under each category, you'll want to make use of CSS Flexbox for the word containers. Here's how you can achieve this:
-
-        For each category's word container (div with category id), display it as a flex container.
-        Set the flex-wrap property to wrap so that the words move to the next line when the max per row is reached.
-        Adjust each word's box to take up half of the container's width, minus some margin.
-        Here's the updated CSS to achieve this:
-        
-        css
-        Copy code
         #words-container > div {
             display: flex; /* Display the container as flex */
             flex-wrap: wrap; /* Allow wrapping */
@@ -62,12 +52,7 @@
             flex: 0 0 calc(50% - 10px); /* Takes up half the width, minus some margin */
             /* ... rest of your styles ... */
         }
-        Now, each category's word container will have two words per row.
-        
-        Here's the full CSS with the updated styles:
-        
-        css
-        Copy code
+
         <style>
             /* ... [previous styles] ... */
         
@@ -105,8 +90,23 @@
         </style>
     
 </head>
+    <header>
+        <h1 id="Title">AAC</h1>
+    </header>
 
 <body>
+    {% if username %}
+        
+          {%if 'logged in' in session%}
+            <span id="account">Profile: {{ username }}</span>
+          {%endif%}
+          <br/>
+          <a id="logout" href="/logout">Logout</a>
+        
+    {% else %}
+        <span id="login"><a href="/login">Login</a></span><br/>
+    {% endif %}
+
     {% with messages = get_flashed_messages() %}
     {% if messages %}
     <ul class="flashes">
@@ -117,10 +117,6 @@
     {% endif %}
     {% endwith %}
 
-    <header>
-        <h1 id="Title">Main Page</h1>
-        <nav><a href="/">Home</a></nav> <!-- Placeholder link; replace with actual navigation if needed -->
-    </header>
     
 
     <div>
@@ -194,14 +190,60 @@
             categoryDiv.appendChild(wordDiv);
         }
         
+        function wordClicked(word, element) {
+            console.log(`Clicked on: ${word}`);
+            
+            // Remove the word from its original location
+            element.remove();
+            
+            // Add the word to the "selected words" container
+            const selectedWordsContainer = document.getElementById('selected-words-container');
+            const wordDiv = document.createElement('div');
+            wordDiv.className = 'word-box selected-word';
+            wordDiv.setAttribute('data-category', element.getAttribute('data-category'));
+            wordDiv.innerText = word;
+            
+            // Add functionality to move it back when clicked in the selected box
+            wordDiv.onclick = function() {
+                wordUnselected(word, wordDiv);
+            }
+            
+            selectedWordsContainer.appendChild(wordDiv);
+            
+            // Append the word to the input text box
+            const inputBox = document.getElementById('input_text');
+            inputBox.value += word + " ";  // Adding a space after the word
+        }
+        
+        function wordUnselected(word, element) {
+            console.log(`Unselected: ${word}`);
+            
+            // Remove the word from the "selected words" container
+            element.remove();
+            
+            // Get the category of the word
+            const category = element.getAttribute('data-category');
+            
+            // Place the word back to its original category at the end
+            const categoryDiv = document.getElementById(category);
+            const wordDiv = document.createElement('div');
+            wordDiv.className = 'word-box';
+            wordDiv.setAttribute('data-category', category);
+            wordDiv.innerText = word;
+            wordDiv.onclick = function() {
+                wordClicked(word, wordDiv);
+            };
+            
+            categoryDiv.appendChild(wordDiv);
+            
+            // Remove the word from the input text box
+            const inputBox = document.getElementById('input_text');
+            inputBox.value = inputBox.value.replace(new RegExp(word + " ", 'g'), "");  // Removing the word and the following space
+        }
+        
+        
     </script>
     
 
 </body>    
 </html>
-
-
-
-
-
-

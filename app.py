@@ -7,6 +7,8 @@ from pymongo import MongoClient
 import certifi
 
 
+
+
 connection = 'mongodb+srv://jyee25:jyee@vthacks.lza3x1j.mongodb.net/'
 client = MongoClient(connection, tlsCAFile=certifi.where())
 # Select the correct database and collection
@@ -14,14 +16,19 @@ client = MongoClient(connection, tlsCAFile=certifi.where())
 db = client['gridwords']  # replace 'your_database_name' with the name of your database
 collection = db['noun']
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static', template_folder='templates')
+
 app.secret_key = 'your_super_secret_key'  
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    # Create a dictionary where each key is a collection name and its value is a list of words from that collection
     data = {}
+    selected_words = []
+    if request.method == 'POST':
+        selected_words_json = request.form.get("selected_words")
+        if selected_words_json:
+            selected_words = json.loads(selected_words_json)
     for collection_name in db.list_collection_names():
         collection = db[collection_name]
         data[collection_name] = [doc.get('word', doc.get(collection_name)) for doc in collection.find({}, {"word": 1, collection_name: 1, "_id": 0}) if 'word' in doc or collection_name in doc]
@@ -45,4 +52,4 @@ def predict():
     return redirect(url_for('index'))
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
+    app.run(debug=True)
