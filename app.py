@@ -20,13 +20,15 @@ dbWord = client['gridwords']
 
 @app.route('/')
 def index():
-        # Create a dictionary where each key is a collection name and its value is a list of words from that collection
+    # Create a dictionary where each key is a collection name and its value is a list of dicts with words and their picture addresses
     data = {}
     for collection_name in dbWord.list_collection_names():
         collection = dbWord[collection_name]
-        data[collection_name] = [doc.get('word', doc.get(collection_name)) for doc in collection.find({}, {"word": 1, collection_name: 1, "_id": 0}) if 'word' in doc or collection_name in doc]
+        data[collection_name] = [{'word': doc.get('word', doc.get(collection_name)), 'picture': doc.get('picture')} for doc in collection.find({}, {"word": 1, "picture": 1, collection_name: 1, "_id": 0}) if 'word' in doc or collection_name in doc]
     username = session.get('username')
-    return render_template('index.html', data=data, username = username)
+    print(data)
+    return render_template('index.html', data=data, username=username)
+
 
 
 @app.route('/login', methods=['GET', 'POST'])
