@@ -54,38 +54,3 @@ To run the project:
 ```bash
 python main.py
 ```
-
----
-
-## Features
-
-### 1. Image Recognition
-
-Before using language models, the system must recognize the content of an image.
-
-### 2. Pre-trained Model
-
-For this project, we utilize the **Hugging Face transformers library**. Specifically, the `Grammarly/coedit-large` text-to-text (txt) model is used.
-
-### 3. Database
-
-[]
-
-### 4. User Interface
-
-- Fetch related words/sentences from the database.
-- Display or verbalize the words/sentences for the user.
-
-### 5. Integration with Language Models
-
-[]
-
-### 6. Continuous Learning
-
-[]
-
----
-
-## Final Thoughts
-
-[]
